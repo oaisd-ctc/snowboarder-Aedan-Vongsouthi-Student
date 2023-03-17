@@ -10,11 +10,18 @@ public class CrashDetector : MonoBehaviour
     [SerializeField] ParticleSystem deathEffect;
 
     [SerializeField] AudioClip deathSFX;
-    void OnTriggerEnter2D(Collider2D other) {
+    bool aliveStatus = true;
+    void OnTriggerEnter2D(Collider2D other) 
+    {
         if (other.tag == "Ground")
         {
-            deathEffect.Play();
-            GetComponent<AudioSource>().PlayOneShot(deathSFX);
+            FindObjectOfType<PlayerController>().DisableControl();
+            if (aliveStatus)
+            {
+                deathEffect.Play();
+                GetComponent<AudioSource>().PlayOneShot(deathSFX);
+                aliveStatus = false;
+            }
             Invoke("ReloadScene", ReloadDelay);
         }
     }
